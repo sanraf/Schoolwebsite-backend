@@ -80,6 +80,9 @@ public class UserController {
         return "welcome user";
     }
 
+    @GetMapping("/count")
+    private Long count(){return usersService.userCount();}
+
 
 
 }

@@ -55,16 +55,19 @@ public class UsersService {
                              String password,
                              MultipartFile photo) throws Exception{
         Role userRole = null;
+        String designation;
 //        mailService.sendPassword(userName,password);
 
             if(userName.equals("Admin") &&password.equals("Password")){
                 userRole =  roleRepository.findByAuthority("ROLE_ADMIN").get();
-            }else {userRole =  roleRepository.findByAuthority("ROLE_USER").get(); }
+                designation = "Admin";
+            }else {
+                userRole =  roleRepository.findByAuthority("ROLE_USER").get();
+                designation = "Learner";}
 
             HashSet<Role> newRole = new HashSet<>();
             newRole.add(userRole);
-            System.out.println(password);
-            return   userRepository.save(new User(userName,firstName,lastName,passwordEncoder.encode(password),photo.getBytes(),newRole));
+            return   userRepository.save(new User(userName,firstName,lastName,designation,passwordEncoder.encode(password),photo.getBytes(),newRole));
 
     }
 
@@ -84,8 +87,7 @@ public class UsersService {
     public void deleteUser(String userName) {
         User user = userRepository.findByUserName(userName).orElse(null);
 
-        if (user != null) {
-
+        if (user != null && !user.getUserName().equals("Admin")) {
             user.getRole().clear();
             userRepository.save(user);
 
@@ -100,10 +102,11 @@ public class UsersService {
         foundUser.setFirstName(user.getFirstName());
         foundUser.setLastName(user.getLastName());
         foundUser.setPhoto(user.getPhoto());
-        System.out.println(Arrays.toString(user.getPhoto()));
         userRepository.save(foundUser);
 
         return user;
     }
+
+    public Long userCount(){return userRepository.count();}
 
 }

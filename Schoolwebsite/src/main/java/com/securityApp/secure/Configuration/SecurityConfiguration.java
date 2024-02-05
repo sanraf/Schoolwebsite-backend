@@ -45,13 +45,13 @@ public class SecurityConfiguration {
                }) )
                 .authorizeHttpRequests(auth-> auth
                 . requestMatchers(HttpMethod.POST,"user/registration","/authenticate/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "user/findByUsername/{userName}").permitAll()
+                .requestMatchers(HttpMethod.GET,"user/count").permitAll()
 
 
 
-                .requestMatchers("user/updateUser/{username}","/user/pagination/{offset}/{pageSize}")
+                .requestMatchers("user/updateUser/{username}","user/findByUsername/{userName}")
                 .hasAnyRole("USER","ADMIN")
-                .requestMatchers("user/deleteUser/{userName}")
+                .requestMatchers("user/deleteUser/{userName}","/user/pagination/**")
                 .hasAnyRole("ADMIN")
 
                 ).sessionManagement(session->
